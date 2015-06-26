@@ -5,59 +5,58 @@
   </ModulePrefs>
   <Content type="html">
   <![CDATA[
-    <div id="content_div"></div>
+<div id="content_div"></div>
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-      // base URL params
-      var bnRegion = "us"
-      var bnDomain = ".api.battle.net/wow/"
-      var bnAPI = "character"
-      var bnRealm = "borean-tundra"
-      var character = "Peashooter"
-      var bnFields = "achievements,titles"
-      var bnLocale = "en_US"
-      var jsonP = "?"
-      var apiKey = "hevjknfvk5mss332av5gumehdp3c4ymt"
+// base URL params
+var bnRegion = "us"
+var bnDomain = ".api.battle.net/wow/"
+var bnAPI = "character"
+var bnRealm = "borean-tundra"
+var character = "Peashooter"
+var bnFields = "achievements,titles"
+var bnLocale = "en_US"
+var jsonP = "?"
+var apiKey = "hevjknfvk5mss332av5gumehdp3c4ymt"
 
-      // assemble URL
-      var url = "https://"
-      url += bnRegion
-      url += bnDomain
-      url += bnAPI
-      url += "/" + bnRealm
-      url += "/" + character
-      url += "?fields=" + bnFields
-      url += "&locale=" + bnLocale
-      url += "&jsonp" + jsonP
-      url += "&apikey" + bnAPI
-      console.log(url);
-      // for example:
-      // https://us.api.battle.net/wow/character/borean-tundra/Peashooter?fields=achievements,titles&locale=en_US&jsonp=%3F&apikey=hevjknfvk5mss332av5gumehdp3c4ymt
+// assemble URL
+var url = "https://"
+url += bnRegion
+url += bnDomain
+url += bnAPI
+url += "/" + bnRealm
+url += "/" + character
+url += "?fields=" + bnFields
+url += "&locale=" + bnLocale
+url += "&jsonp" + jsonP
+url += "&apikey" + bnAPI
+console.log(url);
 
-
-function makeGETRequest(url) {
-	writeHTML("content_div", "makeGETRequest...<br />");
-	var params = {};
-	params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
-	console.log(params);
-	gadgets.io.makeRequest(url, response, params);
-};
-
-function response(obj) {
-	console.log(obj)
-	html = obj.text
-	writeHTML("content_div", html);
-};
-
-makeGETRequest(url);
+// for example: https://us.api.battle.net/wow/character/borean-tundra/Peashooter?fields=achievements,titles&locale=en_US&jsonp=%3F&apikey=hevjknfvk5mss332av5gumehdp3c4ymt
 
 function writeHTML(divId, html){
 	document.getElementById(divId).innerHTML = html;
 	gadgets.window.adjustHeight();
 };
 
-gadgets.util.registerOnLoadHandler(makeJSONRequest);
+function makeGETRequest(url) {
+	writeHTML("content_div", "makeGETRequest...<br />");
+	var params = {};
+	params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+	console.log('makeGETRequest function...');
+	console.log(params);
+	gadgets.io.makeRequest(url, response, params);
+};
+
+function response(obj) {
+	console.log('response function...');
+	console.log(obj);
+	html = obj.text
+	writeHTML("content_div", html);
+};
+
+gadgets.util.registerOnLoadHandler(makeGETRequest(url));
 
      </script>
   ]]>
