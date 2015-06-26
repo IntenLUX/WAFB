@@ -31,7 +31,7 @@
       url += "&locale=" + bnLocale
       url += "&jsonp" + jsonP
       url += "&apikey" + bnAPI
-      console.log url
+      console.log(url);
       // for example:
       // https://us.api.battle.net/wow/character/borean-tundra/Peashooter?fields=achievements,titles&locale=en_US&jsonp=%3F&apikey=hevjknfvk5mss332av5gumehdp3c4ymt
 
