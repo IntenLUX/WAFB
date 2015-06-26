@@ -40,11 +40,12 @@ function writeHTML(divId, html){
 	gadgets.window.adjustHeight();
 };
 
-function makeGETRequest(url) {
-	writeHTML("content_div", "makeGETRequest...<br />");
+function makeJSONRequest(url) {
+	writeHTML("content_div", "starting...");
 	var params = {};
+	params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
 	params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
-	console.log('makeGETRequest function...');
+	console.log('makeJSONRequest function...');
 	console.log(params);
 	gadgets.io.makeRequest(url, response, params);
 };
@@ -56,7 +57,9 @@ function response(obj) {
 	writeHTML("content_div", html);
 };
 
-gadgets.util.registerOnLoadHandler(makeGETRequest(url));
+makeGETRequest(url(;
+
+gadgets.util.registerOnLoadHandler();
 
      </script>
   ]]>
