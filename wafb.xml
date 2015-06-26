@@ -57,7 +57,7 @@ function response(obj) {
 	writeHTML("content_div", html);
 };
 
-makeGETRequest(url(;
+makeGETRequest(url);
 
 gadgets.util.registerOnLoadHandler();
 
