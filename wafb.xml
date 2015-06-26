@@ -37,15 +37,17 @@
 
 
 function makeGETRequest(url) {
-   writeHTML("content_div", "makeGETRequest...<br />");
-   var params = {};
-   params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
-   gadgets.io.makeRequest(url, response, params);
+	writeHTML("content_div", "makeGETRequest...<br />");
+	var params = {};
+	params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+	console.log(params);
+	gadgets.io.makeRequest(url, response, params);
 };
 
 function response(obj) {
-   alert(obj.text);
-   writeHTML("content_div", "response...<br />");
+	console.log(obj)
+	html = obj.text
+	writeHTML("content_div", html);
 };
 
 makeGETRequest(url);
