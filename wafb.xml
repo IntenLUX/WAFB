@@ -1,67 +1,114 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-  <ModulePrefs title="WAFB" height="180">
-	  <Require feature="dynamic-height"/>
-  </ModulePrefs>
-  <Content type="html">
-  <![CDATA[
-<div id="content_div"></div>
+<!-- source: https://dl.dropboxusercontent.com/u/100452347/wafb2.xml -->
+<ModulePrefs title="WAFB: WoW Achievement Feed for Blogger"
+	description="A Blogger Gadget to show a character's recent achivements in the World of Warcraft(TM)"
+	height="200"
+	author="Peashooter"
+	author_email="peashooter@intenlux.com">
+	<Require feature="dynamic-height" />
+	<Require feature="setprefs" />
+	<Require feature="skins" />
+</ModulePrefs>
 
-<script type="text/javascript">
+<!-- REGION -->
+<UserPref name="wafb_bnRegion" display_name="BattleNet Region" default_value="us" datatype="enum" required="true">
+	<EnumValue value="us" display_value="US"/>
+	<EnumValue value="eu" display_value="Europe"/>
+	<EnumValue value="kr" display_value="Korea"/>
+	<EnumValue value="tw" display_value="Taiwan"/>
+	<EnumValue value="cn" display_value="China"/>
+</UserPref>
 
-// base URL params
-var bnRegion = "us"
-var bnDomain = ".api.battle.net/wow/"
-var bnAPI = "character"
-var bnRealm = "borean-tundra"
-var character = "Peashooter"
-var bnFields = "achievements,titles"
-var bnLocale = "en_US"
-var jsonP = "?"
-var apiKey = "hevjknfvk5mss332av5gumehdp3c4ymt"
+<!-- LOCALE -->
+<UserPref name="wafb_bnLocale" display_name="BattleNet Region: Locale " default_value="en_US" datatype="enum" required="true">
+	<EnumValue value="en_US" display_value="US English"/>
+	<EnumValue value="es_MX" display_value="US Español"/>
+	<EnumValue value="pt_BR" display_value="US Português"/>
+	<EnumValue value="en_GB" display_value="Europe English"/>
+	<EnumValue value="es_ES" display_value="Europe Español"/>
+	<EnumValue value="fr_FR" display_value="Europe Français"/>
+	<EnumValue value="ru_RU" display_value="Europe Pусский"/>
+	<EnumValue value="de_DE" display_value="Europe Deutsch"/>
+	<EnumValue value="pt_PT" display_value="Europe Português"/>
+	<EnumValue value="it_IT" display_value="Europe Italiano"/>
+	<EnumValue value="ko_KR" display_value="Korea"/>
+	<EnumValue value="zh_TW" display_value="Taiwan"/>
+	<EnumValue value="zh_CN" display_value="China"/>
+</UserPref>
 
-// assemble URL
-var url = "https://"
-url += bnRegion
-url += bnDomain
-url += bnAPI
-url += "/" + bnRealm
-url += "/" + character
-url += "?fields=" + bnFields
-url += "&locale=" + bnLocale
-url += "&jsonp" + jsonP
-url += "&apikey" + bnAPI
-console.log(url);
+<!-- REALM -->
+<UserPref name="wafb_bnRealm" display_name="Realm Stub (use a dash for spaces in the realm name)" default_value="borean-tundra" required="true"/>
 
-// for example: https://us.api.battle.net/wow/character/borean-tundra/Peashooter?fields=achievements,titles&locale=en_US&jsonp=%3F&apikey=hevjknfvk5mss332av5gumehdp3c4ymt
+<!-- CHARACTER NAME -->
+<UserPref name="wafb_character" display_name="Character Name" default_value="Peashooter" required="true"/>
 
-function writeHTML(divId, html){
-	document.getElementById(divId).innerHTML = html;
-	gadgets.window.adjustHeight();
-};
+<!-- SHOW CHARACTER NAME? -->
+<UserPref name="wafb_showChar" display_name="Show Character's Full Name?" datatype="bool" default_value="true" required="true"/>
 
-function makeJSONRequest(url) {
-	writeHTML("content_div", "starting...");
-	var params = {};
-	params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
-	params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
-	console.log('makeJSONRequest function...');
-	console.log(params);
-	gadgets.io.makeRequest(url, response, params);
-};
+<!-- MAX NUMBER OF ACHIEVES TO SHOW -->
+<UserPref name="wafb_maxAchv" display_name="Number of Achievements to Show" default_value="5" required="true"/>
 
-function response(obj) {
-	console.log('response function...');
-	console.log(obj);
-	html = obj.text
-	writeHTML("content_div", html);
-};
+<!-- ACHIEVEMENT ICON SIZE -->
+<UserPref name="wafb_icnSize" display_name="Achievement Icon Size" default_value="18px" datatype="enum" required="true">
+	<EnumValue value="0px" display_value="none"/> 
+	<EnumValue value="18px" display_value="small"/>
+	<EnumValue value="22px" display_value="medium"/>
+	<EnumValue value="32px" display_value="large"/>
+</UserPref>
 
-makeJSONRequest(url);
+<!-- LOOK AND FEEL -->
+<UserPref name="wafb_backColor" display_name="Background Color"/>
+<UserPref name="wafb_fontFam" display_name="Font Family"/>
+<UserPref name="wafb_fontSiz" display_name="Font Size"/>
+<UserPref name="wafb_hdrFC" display_name="Character Name Font Color"/>
+<UserPref name="wafb_achFC" display_name="Achievement Name Font Color"/>
+<UserPref name="wafb_achDescFC" display_name="Achievement Description Font Color"/>
+<UserPref name="wafb_achDateFC" display_name="Achievement Date Font Color"/>
 
-gadgets.util.registerOnLoadHandler();
+<Content type="html">
+<![CDATA[
+<!doctype html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!-- JQuery -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 
-     </script>
-  ]]>
-  </Content>
+</head>
+<body>
+	<div id="WAFB"></div> <!-- gaget outer wrapping div container -->
+	<script type="text/javascript">
+		// SHOW OR HIDE AN ELEMENT
+		function showOrHide (element_id) {
+			var ele = "#"+element_id;
+			$(ele).toggle(showOrHide);
+			gadgets.window.adjustHeight();
+		}
+
+		// GET DATA FROM RHC
+		function getHTML(url) {
+		   var params = {};
+		   params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+		   gadgets.io.makeRequest(url, response, params); 
+		};
+		
+		// DISPLAY IN CLIENT
+		function response(obj) {  
+		  //obj.text contains the text of the page that was requested  
+		  var html = obj.text;
+		  document.getElementById('WAFB').innerHTML = html;
+		  gadgets.window.adjustHeight();
+		};
+
+		// Define the source URL
+		var url = "https://wafb-intenlux.rhcloud.com/wafb";
+
+		// Make the call
+		gadgets.util.registerOnLoadHandler(getHTML(url));
+	</script>
+</body>
+</html>
+]]>
+</Content>
 </Module>
